@@ -142,4 +142,28 @@ describe "User pages" do
       specify { user.reload.email.should == new_email }
     end
   end
+
+  describe "pluralized microposts" do
+    let(:user) {FactoryGirl.create(:user)}
+
+    it "when more than 1 microposts" do
+      2.times {FactoryGirl.create(:micropost, user: user)}
+      sign_in user
+      visit root_path
+      should have_selector('span', text: "2 microposts" )
+    end
+
+    it "when 1 micropost" do
+      FactoryGirl.create(:micropost, user: user)
+      sign_in user
+      visit root_path
+      should have_selector('span', text: "1 micropost" )
+    end
+      
+    it "when 0 micropost" do
+      sign_in user
+      visit root_path
+      should have_selector('span', text: "0 micropost" )
+    end
+  end
 end

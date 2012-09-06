@@ -14,3 +14,21 @@
 //= require jquery_ujs
 //= require bootstrap
 //= require_tree .
+$(document).ready(function() {
+	function post_message()
+	{
+		 var remaining_characters = 140 - jQuery('#micropost_content').val().length;
+		 var content_text = "Your can type" + remaining_characters + "characters more";
+		 jQuery('#post_message').html(content_text);
+	}
+	
+	post_message();
+	jQuery('#micropost_content').keydown(function(){
+		post_message();
+	})
+	
+	jQuery('#micropost_content').keyup(function(){
+	  post_message();
+	})
+	
+});		

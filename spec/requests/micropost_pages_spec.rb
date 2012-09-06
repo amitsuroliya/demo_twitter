@@ -41,4 +41,36 @@ describe "Micropost pages" do
       end
     end
   end
+
+  describe "pagination microposts" do
+    before do
+      31.times { FactoryGirl.create(:micropost, user: user) }
+      visit root_path
+    end
+
+    it {should have_selector('div.pagination')}
+    it "should list each microposts" do
+      Micropost.paginate(page: 1).each do |micropost|
+        page.should have_selector('li', text: micropost.content)
+      end
+    end
+  end
+
+  describe "delete link" do
+    before do
+      @micropost1 = FactoryGirl.create(:micropost, user: user)
+      @other_user = FactoryGirl.create(:user)
+      FactoryGirl.create(:micropost, user: @other_user)
+    end
+    
+    it "should have delete link" do
+      visit user_path(user)
+      should have_link("delete")
+    end
+
+    it "should not have delete link" do
+      visit user_path(@other_user)
+      should_not have_link("delete")
+    end
+  end
 end
