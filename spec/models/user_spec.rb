@@ -138,4 +138,15 @@ describe User do
     before { @user.save }
     its(:remember_token) { should_not be_blank }
   end
+
+  describe "admin attribute is not accessible" do
+    it "should raise mass assign error" do
+     expect { User.new(name: "Demo User",
+                       email: "demo@example.com",
+                       password: "foobar",
+                       password_confirmation: "foobar",
+                       admin: true).save }.
+                    to raise_error(ActiveModel::MassAssignmentSecurity::Error)
+    end
+  end
 end

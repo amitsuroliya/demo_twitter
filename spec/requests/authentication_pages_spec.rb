@@ -62,6 +62,19 @@ describe "Authentication" do
           it "should render the desired protected page" do
             page.should have_selector('title', text: 'Edit user')
           end
+
+          describe "when signing in again" do
+            before do
+              visit signin_path
+              fill_in "Email",    with: user.email
+              fill_in "Password", with: user.password
+              click_button "Sign in"
+            end
+
+            it "should render the default (profile) page" do
+              page.should have_selector('title', text: user.name) 
+            end
+          end
         end
       end
     end
@@ -93,5 +106,11 @@ describe "Authentication" do
         specify { response.should redirect_to(root_path) }        
       end
     end
+  end
+
+  describe "profile,settings links are not visible to guest user" do
+    before {visit root_path}
+    it {should_not have_link('Profile')}
+    it {should_not have_link('Settings')}
   end
 end
